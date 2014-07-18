@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Procedural Image</title>
+		<link href='http://fonts.googleapis.com/css?family=Orbitron:700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Arapey' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="projects.css" />
+		<meta name="viewport" content="width=device-width">
+	</head>
+	<body style="background:beige; margin:0; padding:0;">
+		<div id="controls">
+			Mutation Rate: <input id="mutationRate_input" type="text" value="0.2"/><br/>
+			Show different seeds <input id="showSeeds" type="text" value="false"><br/>
+			Click on an image to see variants of that particular image.
+		</div>
+		<div id="canvases"></div>
+		<div class="projects">
+			<div class="subtitle">Check out some other projects:</div>
+			<a href="/" class="project" title="Squarific Homepage">
+				<img src="screens/squarific.png" alt="Squarific">
+				<div class="label">Name:</div>
+				Squarific homepage
+				<div class="label">Description:</div>
+				A collection of my best projects.
+			</a>
+			<a href="/simplelogic/" class="project" title="NeuralCar">
+				<img src="screens/simplelogic.png" alt="SimpleLogic"/>
+				<div class="label">Name:</div>
+				SimpleLogic (Open Source)
+				<div class="label">Description:</div>
+				Logic gates simulation in the browser with the ability to share modules. It's also fairly easy to create new nodes.
+			</a>
+			<a href="/neuralcar/" class="project" title="NeuralCar">
+				<img src="screens/neuralcar.png" alt="NeuralCar"/>
+				<div class="label">Name:</div>
+				NeuralCar 2.0 (Open Source)
+				<div class="label">Description:</div>
+				Second version of the car simulation. Each car has a neural network that controls it. Those then go trough generations of evolution till they can drive themself.
+			</a>
+			<a href="http://webreview.squarific.com" class="project" title="WebReviewPlugin">
+				<img src="screens/webreviewplugin.png" alt="Web Review Plugin"/>
+				<div class="label">Name:</div>
+				WebReviewPlugin
+				<div class="label">Description:</div>
+				A chrome plugin that easily lets you search reviews for websites and review websites yourself. 
+			</a>
+			<a href="/kevin/" class="project" title="Pong">
+				<img src="screens/pong.png" alt="Pong"/>
+				<div class="label">Name:</div>
+				Pong (Kevin)
+				<div class="label">Description:</div>
+				The classic pong game as a html5 game made for learning purposes.
+			</a>
+		</div>
+		<script src="js/NeuralNet.js"></script>
+		<script src="js/ProceduralImage.js"></script>
+		<script>
+			var proceduralImages = [],
+				target = document.getElementById("canvases");
+			for (var k = 0; k < 30; k++) {
+				var canvas = document.createElement("canvas");
+				canvas.width = 100;
+				canvas.height = 100;
+				canvas.style.margin = "10px";
+				canvas.style.cursor = "pointer";
+				canvas.style.border = "1px solid black";
+				var ctx = canvas.getContext("2d");
+				canvas.image = new ProceduralImage(Math.random(), ctx);
+				canvas.image.paintImage();
+				target.appendChild(canvas);
+				canvas.addEventListener("click", function (event) {
+					var canvases = document.getElementsByTagName("canvas");
+					for (var c = 0; c < canvases.length; c++) {
+						if (canvases[c] !== event.target) {
+							canvases[c].image.neuralNet.network = canvases[c].image.neuralNet.mutateNetwork(parseFloat(document.getElementById("mutationRate_input").value), event.target.image.neuralNet.network);
+						}
+						canvases[c].image.paintImage();
+					}
+				});
+			}
+		</script>
+	</body>
+</html>
